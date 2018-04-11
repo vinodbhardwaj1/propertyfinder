@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="Suite" allow-return-values="true" thread-count="5">
+	<test name="PropertyFinder Test1" parallel="false">
+		<parameter name="browser" value="chrome"></parameter>
+		<classes>
+			<class name="test.Propertyfinder.TestCases">
+				<methods>
+					<include name="verifySearchProperty">
+						<parameter name="url" value="https://www.propertyfinder.qa/"></parameter>
+					</include>
+					<include name="verifyAgentFiltering">
+						<parameter name="url" value="https://www.propertyfinder.ae/"></parameter>
+					</include>
+					<include name="verifyAgentDetails">
+						<parameter name="url" value="https://www.propertyfinder.ae/"></parameter>
+					</include>
+				</methods>
+			</class>
+		</classes>
+	</test> <!-- Test -->
+</suite> <!-- Suite -->
