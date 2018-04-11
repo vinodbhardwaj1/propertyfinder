@@ -133,8 +133,10 @@ public class PageUtil {
 		cObj.selectFromDropDown(maxBed, maxnBedList, "7 Bedrooms");
 
 		cObj.clickOnElement(findBtn);
+		Thread.sleep(4000);
 
 		cObj.selectFromDropDown(sortByBox, sortingOptionList, "Price (high)");
+		Thread.sleep(2000);
 
 		for (WebElement element : propertyAmountList) {
 			System.out.println(element.getText());
