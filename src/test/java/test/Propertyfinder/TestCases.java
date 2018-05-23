@@ -6,8 +6,34 @@ import org.testng.annotations.Test;
 public class TestCases extends DriverManager {
 
 	PageUtil pageObj;
+	LinkedInPageUtil linkedInUtilObj;
 
-	 @Test
+	
+	@Test
+	public void sendRequest() throws InterruptedException{
+		System.out.println("Test Execution started....");
+		linkedInUtilObj = new LinkedInPageUtil(driver);
+		
+		linkedInUtilObj.loginIntoLinkedIn();
+		linkedInUtilObj.sendConnectionRequest();
+		
+		
+	}
+	
+	
+	
+	
+//	 @Test
+		public void verifyAllLinks() {
+			System.out.println("Test Execution started...");
+			pageObj = new PageUtil(driver);
+			pageObj.verifyAllLinks();
+			System.out.println("Test execution completed");
+
+		}
+	 
+	 
+//	 @Test
 	public void verifySearchProperty() {
 		try {
 			System.out.println("Test Execution started...");
@@ -20,7 +46,7 @@ public class TestCases extends DriverManager {
 
 	}
 
-	@Test
+//	@Test
 	public void verifyAgentFiltering() {
 		boolean result = false;
 		try {
@@ -36,7 +62,7 @@ public class TestCases extends DriverManager {
 		}
 	}
 	
-	@Test
+//	@Test
 	public void verifyAgentDetails() {
 		try {
 			System.out.println("Test Execution started...");

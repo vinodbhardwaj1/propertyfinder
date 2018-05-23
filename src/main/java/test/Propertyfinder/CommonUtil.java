@@ -3,10 +3,8 @@ package test.Propertyfinder;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -15,38 +13,30 @@ import java.util.Map.Entry;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.io.FileUtils;
+import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.remote.DesiredCapabilities;
-import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
 
 public class CommonUtil {
 
 	public WebDriver launchBrowserAndDriver(String browser) {
 		WebDriver driver = null;
-		DesiredCapabilities capability = null;
-
 		try {
 			if (browser.equalsIgnoreCase("chrome")) {
-				// capability = DesiredCapabilities.chrome();
-				// capability.setCapability("chrome.switches",
-				// Arrays.asList("--incognito"));
-				// capability.setCapability("chrome.binary",
-				// "D:\\Automation\\Propertyfinder\\src\\main\\resources\\chromedriver.exe");
-				//
-				// ChromeOptions option = new ChromeOptions();
-				// option.addArguments("--start-maximized");
-				// capability.setCapability(ChromeOptions.CAPABILITY, option);
-				
-				// driver = new RemoteWebDriver(new
-				// URL("http://localhost:4444/wd/hub"), capability);
-
 				System.setProperty("webdriver.chrome.driver",
 						System.getProperty("user.dir") + File.separator + "grid/chromedriver.exe");
+				ChromeOptions options = new ChromeOptions();
+				options.addArguments("disable-infobars");
+				
 				driver = new ChromeDriver();
 				driver.manage().timeouts().implicitlyWait(120, TimeUnit.SECONDS);
 				driver.manage().window().maximize();
@@ -56,6 +46,27 @@ public class CommonUtil {
 			e.printStackTrace();
 		}
 		return driver;
+	}
+	
+	public boolean waitForElement(WebDriver driver, int maxWait, String findBy, String findByText) {
+		boolean result = false;
+		WebElement waitElement = null;
+		WebDriverWait wait = new WebDriverWait(driver, maxWait);
+		try {
+			if (findBy.equalsIgnoreCase("id"))
+				waitElement = wait
+						.until(ExpectedConditions.visibilityOfElementLocated(By.id(findByText)));
+			else if (findBy.equalsIgnoreCase("xpath"))
+				waitElement = wait
+						.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(findByText)));
+
+			if (waitElement != null && waitElement.isDisplayed()) {
+				result = true;
+			}
+		} catch (Exception e) {
+			result = false;
+		}
+		return result;
 	}
 
 	public void clickOnElement(WebElement elem) {
@@ -159,4 +170,58 @@ public class CommonUtil {
 	            }
 	        }
 	    }
+	 
+	 public void pageScrollDown(WebDriver driver) throws InterruptedException{
+		 JavascriptExecutor js = (JavascriptExecutor)driver;
+		 js.executeScript("window.scrollTo(0,document.body.scrollHeight)");
+		 Thread.sleep(10000);
+	 }
+	 
+	 public void pageScrollDown(WebDriver driver, int scrollValue) throws InterruptedException{
+		 JavascriptExecutor js = (JavascriptExecutor)driver;
+		 
+		 Long startValue = (Long) js.executeScript("return window.pageYOffset;");
+		 Long endValue = startValue+scrollValue;
+		 
+		 js.executeScript("window.scrollTo("+startValue+","+endValue+")");
+		 Thread.sleep(10000);
+	 }
+	 
+	 
+	 public void pageScrollUpToElement(WebDriver driver, WebElement element) throws InterruptedException{
+		 JavascriptExecutor js = (JavascriptExecutor)driver;
+		 js.executeScript("arguments[0].scrollIntoView();", element);
+	 }
+	 
+	 
+	 
+	 public boolean isElementDisplayed(WebElement element){
+		 boolean result=false;
+		 try{
+			 if(element.isDisplayed()){
+				 result=true;
+			 }
+		 }catch(Exception e){
+			 e.printStackTrace();
+		 }
+		 return result;
+	 }
+	 
+	public boolean waitUntilElementNotClickable(WebDriver driver, WebElement element) {
+		boolean result=false;
+		try {
+			WebDriverWait wait = new WebDriverWait(driver, 30);
+			WebElement elem = wait.until(ExpectedConditions.elementToBeClickable(element));
+			if(elem!=null){
+				result = true;
+			}
+			
+		} catch (NoSuchElementException | WebDriverException e) {
+			e.toString();
+		}
+		return result;
+	}
+	
+	 
+	 
 }

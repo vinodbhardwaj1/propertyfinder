@@ -1,15 +1,13 @@
 package test.Propertyfinder;
 
-import java.text.SimpleDateFormat;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
 
-import org.openqa.selenium.TakesScreenshot;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -129,6 +127,14 @@ public class PageUtil {
 			}
 		}
 		cObj.selectFromDropDown(propertyType, propertyTypeList, "Villa");
+//		cObj.clickOnElement(propertyType);
+//		WebElement types = driver .findElement(By.xpath("//div[@class='searchproperty_column searchproperty_type']/div/div/div"));
+//		Select dropdown = new Select(types);
+//		dropdown.selectByValue("Villa");
+		
+		
+		
+		
 		cObj.selectFromDropDown(minBed, minBedList, "3 Bedrooms");
 		cObj.selectFromDropDown(maxBed, maxnBedList, "7 Bedrooms");
 
@@ -212,5 +218,41 @@ public class PageUtil {
 	}
 	
 	
+	public void verifyAllLinks(){
+		
+		List<WebElement> linkList = driver.findElements(By.tagName("a"));
+		System.out.println("Total links: "+linkList.size());
+		int i=1;
+		for(WebElement elem:linkList){
+			String url = elem.getAttribute("href");
+			verifyLinkUrl(url);
+			System.out.println(i++);
+		}
+		
+	}
+	
+	private void verifyLinkUrl(String url){
+		try {
+			URL link = new URL(url);
+			HttpURLConnection connection = (HttpURLConnection)link.openConnection();
+			connection.setConnectTimeout(2000);
+			connection.connect();
+			
+			if(connection.getResponseCode()==200){
+				System.out.println(url+" is working fine.");
+				System.out.println(connection.getResponseMessage());
+			}else if(connection.getResponseCode()==404){
+				System.out.println(url+" is broken");
+				System.out.println(connection.getResponseMessage());
+			}else{
+				System.out.println(url+ " not opening");
+				System.out.println(connection.getResponseMessage());
+			}
+			System.out.println("---------------------------------------");
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
 }
